@@ -3,7 +3,7 @@ const morgan = require('morgan');
 const { routerGetPharmacy } = require('./services/getPharmacy/getPharmacy');
 const { routerGetMedicine, getMedicineForNamePharmacy } = require('./services/getMedicines/getMedicine');
 const { getSearch } = require('./services/getMedicines/searchMedicine/getSearch');
-const { setSuscription, deleteSuscription,getUsers } = require('./services/Suscription/suscription');
+const { setSuscription, deleteSuscription, getUsers } = require('./services/Suscription/suscription');
 
 const app = express();
 app.set('port', process.env.PORT || 5001);
@@ -49,7 +49,9 @@ app.get('/getMedicine/:name', async (rq, rp) => {
 
 app.get('/getSearch', async (rq, rp) => {
     const search = rq.query.search;
-    const response = await getSearch(search);
+    const prov = rq.query.prov;
+    const mun = rq.query.mun;
+    const response = await getSearch(search, prov, mun);
     if (!response.Error) {
         rp.send(response);
     }
