@@ -1,9 +1,9 @@
 const express = require('express');
 const morgan = require('morgan');
 const { routerGetPharmacy } = require('./services/getPharmacy/getPharmacy');
-const { routerGetMedicine,getMedicineForNamePharmacy } = require('./services/getMedicines/getMedicine');
+const { routerGetMedicine, getMedicineForNamePharmacy } = require('./services/getMedicines/getMedicine');
 const { getSearch } = require('./services/getMedicines/searchMedicine/getSearch');
-const { setSuscription, deleteSuscription } = require('./services/Suscription/suscription');
+const { setSuscription, deleteSuscription,getUsers } = require('./services/Suscription/suscription');
 
 const app = express();
 app.set('port', process.env.PORT || 5001);
@@ -65,4 +65,9 @@ app.post('/setSuscription', (rq, rp) => {
 
 app.delete('/deleteSuscription/:id', (rq, rp) => {
     deleteSuscription(rq.params.id, rp);
+})
+
+
+app.get('/getUsers', (rq, rp) => {
+    getUsers(rp);
 })

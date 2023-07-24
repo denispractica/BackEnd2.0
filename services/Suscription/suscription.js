@@ -27,9 +27,7 @@ const setSuscription = async (user, rp) => {
     const oldUser = await dataBase.find({ email: user.email });
 
     if (oldUser.length > 0) {
-        await dataBase.updateOne({ email: user.email }, { pharmacy: user.pharmacy, medicine: user.medicine, tarjeton: user.tarjeton })
-            .then(r => rp.send({ "response": "Has actualizado tu suscripción correctamente" }))
-            .catch(e => rp.send({ "response": "Ha ocurrido un error" }));
+        rp.send({ "response": "Ese correo ya está en uso", "Error": false })
     }
     else {
         const newDataBase = new dataBase({
@@ -39,8 +37,8 @@ const setSuscription = async (user, rp) => {
             tarjeton: user.tarjeton
         })
         await newDataBase.save()
-            .then(r => rp.send({ "response": "Te has suscrito correctamente" }))
-            .catch(e => rp.send({ "response": "Ha ocurrido un error" }));
+            .then(r => rp.send({ "response": "Te has suscrito correctamente 👍", "Error": false }))
+            .catch(e => rp.send({ "response": "Ocurrió un error", "Error": true }));
 
     }
 }
@@ -52,16 +50,21 @@ const deleteSuscription = async (id, rp) => {
 
     if (oldUser.length > 0) {
         await dataBase.deleteOne({ _id: id })
-            .then(r => rp.send("Se ha eliminado la suscripción correctamente"))
-            .catch(e => rp.send({ "response": "Ha ocurrido un error" }));
+            .then(r => rp.send({ "response": "Se ha eliminado la suscripción correctamente", "Error": false }))
+            .catch(e => rp.send({ "response": "Ha ocurrido un error", "Error": true }));
     }
     else {
-        rp.send("Ese usuario no existe en la base de datos");
+        rp.send({ "response": "Ese usuario no existe en la base de datos", "Error": false });
     }
 
+
+}
+const getUsers = async (rp) => {
+    await dataBase.find({}).then(r => rp.send({ "Users": r, "Error": false }))
+        .catch(e => rp.send({ "response": "Algo salió mal", "Error": true }));
 
 }
 
 
 
-module.exports = { setSuscription, deleteSuscription }
+module.exports = { setSuscription, deleteSuscription, getUsers }
